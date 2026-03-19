@@ -60,7 +60,7 @@ X_test_scaled = scaler.transform(X_test)
 
 # Train SGD
 np.random.seed(42)
-model = StochasticGradientDescent(learning_rate=0.01, epochs=50)
+model = StochasticGradientDescent(learning_rate=0.0001, epochs=100)
 model.fit(X_train_scaled, y_train)
 y_pred = model.predict(X_test_scaled)
 
