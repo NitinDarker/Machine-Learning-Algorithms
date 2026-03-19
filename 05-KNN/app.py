@@ -24,7 +24,7 @@ knn = KNeighborsClassifier(n_neighbors=5)
 knn.fit(X_train, y_train)
 y_pred = knn.predict(X_test)
 
-print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Testing Accuracy:", accuracy_score(y_test, y_pred))
 print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
 print("\nClassification Report:\n", classification_report(y_test, y_pred, target_names=target_names))
 

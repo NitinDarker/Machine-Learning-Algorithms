@@ -25,46 +25,62 @@ lr = LinearRegression()
 lr.fit(X_train_scaled, y_train)
 lr_pred = lr.predict(X_test_scaled)
 
-# Ridge Regression (alpha controls regularization strength)
-ridge = Ridge(alpha=1.0, random_state=42)
-ridge.fit(X_train_scaled, y_train)
-ridge_pred = ridge.predict(X_test_scaled)
-
-# Evaluate both
 print("--- Linear Regression ---")
 print(f"  MSE:  {mean_squared_error(y_test, lr_pred):.4f}")
 print(f"  MAE:  {mean_absolute_error(y_test, lr_pred):.4f}")
 print(f"  R²:   {r2_score(y_test, lr_pred):.4f}")
 
-print("\n--- Ridge Regression (alpha=1.0) ---")
-print(f"  MSE:  {mean_squared_error(y_test, ridge_pred):.4f}")
-print(f"  MAE:  {mean_absolute_error(y_test, ridge_pred):.4f}")
-print(f"  R²:   {r2_score(y_test, ridge_pred):.4f}")
+# Ridge Regression with different alpha values
+alphas = [0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+ridge_results: list[tuple[float, float, float, float]] = []
 
-# Compare coefficients
-print("\n--- Coefficient Comparison ---")
+print("\n--- Ridge Regression (varying alpha/lambda) ---")
+print(f"{'Alpha':<10} {'MSE':>10} {'MAE':>10} {'R²':>10}")
+
+for alpha in alphas:
+    ridge = Ridge(alpha=alpha, random_state=42)
+    ridge.fit(X_train_scaled, y_train)
+    ridge_pred = ridge.predict(X_test_scaled)
+    mse = mean_squared_error(y_test, ridge_pred)
+    mae = mean_absolute_error(y_test, ridge_pred)
+    r2 = r2_score(y_test, ridge_pred)
+    ridge_results.append((alpha, mse, mae, r2))
+    print(f"{alpha:<10} {mse:>10.4f} {mae:>10.4f} {r2:>10.4f}")
+
+# Coefficient comparison: Linear vs Ridge at different alphas
 feature_names = [
     "MedInc", "HouseAge", "AveRooms", "AveBedrms",
     "Population", "AveOccup", "Latitude", "Longitude"
 ]
-print(f"{'Feature':<12} {'Linear':>10} {'Ridge':>10}")
-for name, lc, rc in zip(feature_names, lr.coef_, ridge.coef_):
-    print(f"{name:<12} {lc:>10.4f} {rc:>10.4f}")
 
-# Plot: Predicted vs Actual for both
-fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+print("\n--- Coefficient Comparison ---")
+header = f"{'Feature':<12} {'Linear':>10}"
+for alpha in alphas:
+    header += f" {'a=' + str(alpha):>10}"
+print(header)
 
-axes[0].scatter(y_test, lr_pred, alpha=0.3, edgecolors='k', linewidths=0.5)
-axes[0].plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
-axes[0].set_xlabel('Actual')
-axes[0].set_ylabel('Predicted')
-axes[0].set_title(f'Linear Regression (R²={r2_score(y_test, lr_pred):.4f})')
+ridge_models = []
+for alpha in alphas:
+    ridge = Ridge(alpha=alpha, random_state=42)
+    ridge.fit(X_train_scaled, y_train)
+    ridge_models.append(ridge)
 
-axes[1].scatter(y_test, ridge_pred, alpha=0.3, edgecolors='k', linewidths=0.5, color='coral')
-axes[1].plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
-axes[1].set_xlabel('Actual')
-axes[1].set_ylabel('Predicted')
-axes[1].set_title(f'Ridge Regression (R²={r2_score(y_test, ridge_pred):.4f})')
+for i, name in enumerate(feature_names):
+    row = f"{name:<12} {lr.coef_[i]:>10.4f}"
+    for model in ridge_models:
+        row += f" {model.coef_[i]:>10.4f}"
+    print(row)
 
+# Plot: R² vs Alpha
+r2_values = [r[3] for r in ridge_results]
+plt.figure(figsize=(8, 5))
+plt.plot(alphas, r2_values, marker='o', color='steelblue')
+plt.axhline(y=r2_score(y_test, lr_pred), color='red', linestyle='--', label='Linear Regression')
+plt.xscale('log')
+plt.xlabel('Alpha (Lambda)')
+plt.ylabel('R² Score')
+plt.title('Ridge Regression: R² vs Alpha')
+plt.legend()
+plt.grid(True)
 plt.tight_layout()
 plt.show()

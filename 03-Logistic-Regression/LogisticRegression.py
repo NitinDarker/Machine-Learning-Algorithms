@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_breast_cancer
@@ -42,6 +41,7 @@ model.fit(X_train, y_train)
 
 y_pred = model.predict(X_test)
 
+print(f"\nAccuracy: {accuracy_score(y_train, model.predict(X_train)) * 100:.2f}%")
 print(f"\nAccuracy: {accuracy_score(y_test, y_pred) * 100:.2f}%")
 print("\nClassification Report:")
 print(classification_report(y_test, y_pred, target_names=target_names))
@@ -56,5 +56,5 @@ plt.title('Confusion Matrix')
 plt.xlabel('Predicted')
 plt.ylabel('Actual')
 plt.tight_layout()
-plt.savefig('02-Logistic-Regression/confusion_matrix.png', dpi=150)
+plt.savefig('confusion_matrix.png', dpi=150)
 plt.show()
