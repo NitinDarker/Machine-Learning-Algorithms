@@ -1,5 +1,4 @@
 class MyCategoricalNB:
-
     def __init__(self):
         self.classes: list = []
         self.priors: dict = {}
@@ -45,7 +44,6 @@ class MyCategoricalNB:
                 best_class = c
 
         return best_class
-
 
 # Demo: Weather dataset
 X = [

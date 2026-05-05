@@ -3,7 +3,6 @@ import numpy as np
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 
-
 class MyGaussianNB:
 
     def __init__(self):
@@ -56,7 +55,7 @@ X = np.array(X)
 y = np.array(y)
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+    X, y, test_size=0.2, random_state=66
 )
 
 model = MyGaussianNB()

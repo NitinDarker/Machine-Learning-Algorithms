@@ -9,12 +9,12 @@ X, y = load_iris(return_X_y=True)
 X = np.array(X)
 y = np.array(y)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=66)
 
 print(X_train.shape)
 print(X_test.shape)
 
-clf = DecisionTreeClassifier(random_state=42)
+clf = DecisionTreeClassifier(random_state=66)
 clf.fit(X_train, y_train)
 
 y_pred = clf.predict(X_test)

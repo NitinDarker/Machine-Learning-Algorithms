@@ -5,7 +5,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 def analyzer(max_depth):
     # Load data
-    df = pd.read_csv("Social_Network_Ads.csv")
+    df = pd.read_csv("D:/Code/Machine-Learning-Algorithms/06-Decision-Tree/Social_Network_Ads.csv")
 
     # Use ONLY two features for visualization
     X = df[["Age", "EstimatedSalary"]].values
